@@ -13,9 +13,20 @@ public:
 	StrVector();
 	~StrVector();
 
-	StrVector(const StrVector &);
-	StrVector& operator=(const StrVector &);
+	//拷贝控制成员
+	StrVector(const StrVector &);			 //拷贝构造函数
+	StrVector& operator=(const StrVector &); //拷贝赋值运算符
+	StrVector(StrVector &&);				//移动构造函数
+	StrVector& operator=(StrVector &&);      //移动赋值运算符
+
+
+
+
+
+
 	void push_back(const string &);
+
+	void push_back(string &&);
 
 	size_t size() const
 	{

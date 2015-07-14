@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "StrVector.h"
 
-
+#define noexcept _NOEXCEPT 
 
 StrVector::StrVector() :elements(nullptr), first_free(nullptr), cap(nullptr)
 {
@@ -33,10 +33,37 @@ StrVector& StrVector::operator=(const StrVector& rhs)
 	return *this;
 }
 
+//移动构造函数
+StrVector::StrVector(StrVector&& rhs) noexcept
+:elements(rhs.elements), first_free(rhs.first_free), cap(rhs.cap)
+{
+	 rhs.elements = rhs.first_free = rhs.cap = nullptr;
+}
+
+//移动赋值运算符
+StrVector& StrVector::operator=(StrVector && rhs) noexcept
+{
+	if (&rhs!=this)
+	{
+		free();
+		elements = rhs.elements;
+		first_free = rhs.first_free;
+		cap = rhs.cap;
+		rhs.elements = rhs.first_free = rhs.cap = nullptr;
+	}
+	return *this;
+}
+
 void StrVector::push_back(const string& str)
 {
 	chk_n_alloc();
 	alloc.construct(first_free++,str);
+}
+
+void StrVector::push_back(string && rhs)
+{
+	chk_n_alloc();
+	alloc.construct(first_free++, std::move(rhs));
 }
 
 pair<string*, string*> StrVector::alloc_n_copy(const string* b, const string* e)
